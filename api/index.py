@@ -7,9 +7,12 @@ from sqlalchemy import or_
 
 app = Flask(__name__)
 
-# 🔧 Build absolute path
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"
+# 🔧 Use the instance path for the database file
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'todo.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Make sure the instance folder exists
+os.makedirs(app.instance_path, exist_ok=True)
 
 # Initialize the database
 db = SQLAlchemy(app)
