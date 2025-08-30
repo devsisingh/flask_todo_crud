@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container my-4">
+    <h2>Update Todo</h2>
+<form action="/update/{{updatetodo.sno}}" method="POST">
+  <div class="form-group">
+    <label for="title">Todo Title</label>
+    <input type="text" class="form-control" name="title" id="title" aria-describedby="emailHelp" value="{{updatetodo.title}}">
+  </div>
+  <div class="form-group">
+    <label for="desc">Todo Description</label>
+    <input type="text" class="form-control" name="desc" id="desc" value="{{updatetodo.desc}}">
+  </div>
+  <button type="submit" class="btn btn-primary btn-outline-primary">Update</button>
+</form>
+</div>
+
+
+<div class="container my-4">
+    <h2>Your Todos</h2>
+    
+    {% if allTodos|length==0 %}
+      no record
+    {% else %}
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">SNo</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Time</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- typing jfor for automatic for-loop in jinja2 -->
+    {% for todo in allTodos %}
+      <tr>
+      <th scope="row">{{loop.index}}</th>
+      <td>{{todo.title}}</td>
+      <td>{{todo.desc}}</td>
+      <td>{{todo.date_created}}</td>
+      <td>
+        <a href="/update/{{todo.sno}}" type="button" class="btn btn-outline-success btn-sm mx-1">update</a>
+        <a href="/delete/{{todo.sno}}" type="button" class="btn btn-outline-danger btn-sm mx-1">delete</a>
+      </td>
+    </tr>
+      </tbody>
+
+    {% endfor %}
+    {% endif %}
+</table>
+</div>
+
+{% endblock body %}
