@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 from sqlalchemy import or_
+from . import handler
 
 app = Flask(__name__)
 
