@@ -7,8 +7,14 @@ from sqlalchemy import or_
 
 app = Flask(__name__)
 
-# 🔧 Use the instance path for the database file
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'todo.db')}"
+# Check if the app is running in a read-only environment (Vercel)
+if os.access('/var/task', os.W_OK) == False:
+    # In-memory SQLite database
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///:memory:"
+else:
+    # Local SQLite database (or PostgreSQL in production)
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'todo.db')}"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Make sure the instance folder exists
