@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 from sqlalchemy import or_
-from . import handler
 
 app = Flask(__name__)
 
@@ -68,9 +67,8 @@ def update(sno):
 with app.app_context():
     db.create_all()
 
-# Required by Vercel to run Flask as a serverless function
-def handler(environ, start_response):
-    return app(environ, start_response)
+if __name__ == "__main__":
+    app.run()
 
 # if __name__ == '__main__':
 #     app.run(debug=True)
