@@ -5,16 +5,9 @@ from datetime import datetime
 import os
 from sqlalchemy import or_
 
-app = Flask(__name__)
+app = Flask(__name__, instance_path='/tmp/instance')
 
-# Check if the app is running in a read-only environment (Vercel)
-if os.access('/var/task', os.W_OK) == False:
-    # In-memory SQLite database
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///:memory:"
-else:
-    # Local SQLite database (or PostgreSQL in production)
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'todo.db')}"
-
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///:memory:"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Make sure the instance folder exists
@@ -22,9 +15,6 @@ os.makedirs(app.instance_path, exist_ok=True)
 
 # Initialize the database
 db = SQLAlchemy(app)
-
-# Initialize Flask-Migrate
-migrate = Migrate(app, db)
 
 class Todo(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
@@ -81,6 +71,7 @@ def update(sno):
 with app.app_context():
     db.create_all()
 
-# Vercel handler
-def handler(environ, start_response):
-    return app(environ, start_response)
+migrate = Migrate(app, db)
+
+if __name__ == '__main__':
+    app.run(debug=False, host='0.0.0.0')
