@@ -7,8 +7,7 @@ from sqlalchemy import or_
 app = Flask(__name__)
 
 # 🔧 Build absolute path
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////" + os.path.join(basedir, "todo.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/todo.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -64,13 +63,13 @@ def update(sno):
     updatetodo = Todo.query.filter_by(sno=sno).first()
     return render_template("update.html", updatetodo = updatetodo)
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
-# Create tables if not exist (important for serverless)
+# Create the database tables if they do not exist yet
 with app.app_context():
     db.create_all()
 
 # Required by Vercel to run Flask as a serverless function
 def handler(environ, start_response):
     return app(environ, start_response)
+
+# if __name__ == '__main__':
+#     app.run(debug=True)

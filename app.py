@@ -64,5 +64,9 @@ def update(sno):
     updatetodo = Todo.query.filter_by(sno=sno).first()
     return render_template("update.html", updatetodo = updatetodo)
 
+# Create the database tables if they do not exist yet
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
     app.run(debug=True)
