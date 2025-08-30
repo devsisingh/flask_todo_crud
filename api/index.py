@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from datetime import datetime
 import os
 from sqlalchemy import or_
@@ -7,10 +8,14 @@ from sqlalchemy import or_
 app = Flask(__name__)
 
 # 🔧 Build absolute path
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///:memory:"
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Initialize the database
 db = SQLAlchemy(app)
+
+# Initialize Flask-Migrate
+migrate = Migrate(app, db)
 
 class Todo(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
@@ -63,6 +68,10 @@ def update(sno):
     updatetodo = Todo.query.filter_by(sno=sno).first()
     return render_template("update.html", updatetodo = updatetodo)
 
-# Create the database tables if they do not exist yet
+# Initialize the database tables (migrate)
 with app.app_context():
     db.create_all()
+
+# Vercel handler
+def handler(environ, start_response):
+    return app(environ, start_response)
