@@ -7,7 +7,7 @@ from sqlalchemy import or_
 app = Flask(__name__)
 
 # 🔧 Build absolute path
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/todo.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -70,6 +70,3 @@ with app.app_context():
 # Required by Vercel to run Flask as a serverless function
 def handler(environ, start_response):
     return app(environ, start_response)
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
