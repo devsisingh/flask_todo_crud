@@ -67,6 +67,10 @@ def update(sno):
 # if __name__ == '__main__':
 #     app.run(debug=True)
 
+# Create tables if not exist (important for serverless)
+with app.app_context():
+    db.create_all()
+
 # Required by Vercel to run Flask as a serverless function
 def handler(environ, start_response):
     return app(environ, start_response)
