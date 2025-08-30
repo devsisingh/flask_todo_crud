@@ -9,6 +9,7 @@ app = Flask(__name__)
 # 🔧 Build absolute path
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + os.path.join(basedir, "todo.db")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
@@ -63,5 +64,9 @@ def update(sno):
     updatetodo = Todo.query.filter_by(sno=sno).first()
     return render_template("update.html", updatetodo = updatetodo)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+# Required by Vercel to run Flask as a serverless function
+def handler(environ, start_response):
+    return app(environ, start_response)
