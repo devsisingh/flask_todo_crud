@@ -7,7 +7,7 @@ from sqlalchemy import or_
 app = Flask(__name__)
 
 # 🔧 Build absolute path
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///todo.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///:memory:"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
